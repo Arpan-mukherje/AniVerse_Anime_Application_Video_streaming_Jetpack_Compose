@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt) // Apply Hilt plugin
     id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
 }
 
 android {
@@ -69,6 +70,16 @@ dependencies {
     implementation(libs.generativeai)
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+
+    // Jetpack Compose Integration
+    implementation ("androidx.navigation:navigation-compose:2.8.4")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation ("io.coil-kt:coil-compose:2.1.0")
+    // OkHttp Logging Interceptor
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
     kapt(libs.hilt.compiler)
 
     // Testing
