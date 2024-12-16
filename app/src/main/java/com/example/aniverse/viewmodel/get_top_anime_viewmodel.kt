@@ -27,9 +27,9 @@ class AnimeViewModel @Inject constructor(private val apiService: ApiService) : V
     private val _currentPage = MutableStateFlow(1)
     private var hasNextPage = true
 
-    init {
-        fetchTopAnime()
-    }
+//    init {
+//        fetchTopAnime()
+//    }
 
     fun fetchTopAnime() {
         if (_isLoading.value || !hasNextPage) return

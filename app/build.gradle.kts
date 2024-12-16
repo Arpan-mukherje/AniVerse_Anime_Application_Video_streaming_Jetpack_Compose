@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.generativeai)
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+//videoplayer
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
 
 
     // Jetpack Compose Integration

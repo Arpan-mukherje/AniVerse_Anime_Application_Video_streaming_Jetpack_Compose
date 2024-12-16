@@ -32,6 +32,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -58,13 +59,16 @@ import com.example.aniverse.ui.theme.GradientColor2
 import com.example.aniverse.viewmodel.AnimeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ResourceAsColor")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ResourceAsColor", "SuspiciousIndentation")
+
 @Composable
 fun HomeScreen(navController: NavController, viewModel: AnimeViewModel = hiltViewModel()) {
     val topAnime by viewModel.topAnime.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
-
+    LaunchedEffect(Unit) {
+        viewModel.fetchTopAnime()
+    }
     Scaffold(
         containerColor = BackGroundColor,
         topBar = {
@@ -137,13 +141,12 @@ fun HomeScreen(navController: NavController, viewModel: AnimeViewModel = hiltVie
                         ) {
                             items(topAnime.size) { index ->
                                 val anime = topAnime[index]
-                                val encodedUrl = Uri.encode(anime.images.jpg.image_url)
 
 
                                     GridBox(anime,{
                                         // Handle the click here
-                                        val encodedUrl = Uri.encode(anime.images.jpg.image_url)
-                                        navController.navigate("all-episode/${anime.mal_id}/$encodedUrl")
+                                      //  val encodedUrl = Uri.encode(anime.trailer.embed_url)
+                                        navController.navigate("all-episode/${anime.mal_id}/${anime.trailer.youtube_id}/$index")
                                     })
 
                                 if (index == topAnime.size - 2 && !isLoading) {

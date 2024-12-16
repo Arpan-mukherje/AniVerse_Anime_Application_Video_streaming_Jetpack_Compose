@@ -1,7 +1,11 @@
 package com.example.aniverse.screens.episodes
 
+import YoutubeScreen
+import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,10 +53,13 @@ import coil.request.ImageRequest
 import com.example.aniverse.model.AnimeAllEpisodeModel
 import com.example.aniverse.ui.theme.BackGroundColor
 import com.example.aniverse.viewmodel.AllEpisodeViewModel
+import com.example.aniverse.viewmodel.AnimeViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun AllEpisodesScreen(navController: NavController,viewModel: AllEpisodeViewModel = hiltViewModel(),url:String,id:Int) {
+fun AllEpisodesScreen(navController: NavController,viewModel: AllEpisodeViewModel = hiltViewModel(),url:String,id:Int,index:Int,topanimeviewmodel:AnimeViewModel= hiltViewModel()) {
     val allanimeEpisode by viewModel.getAllEpisode.collectAsState()
+    val topAnime by topanimeviewmodel.topAnime.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     LaunchedEffect(Unit) {
@@ -69,17 +76,18 @@ fun AllEpisodesScreen(navController: NavController,viewModel: AllEpisodeViewMode
                         .height(300.dp)
                 ) {
                     Column {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data("https://img1.ak.crunchyroll.com/i/spire1-tmb/fccf5fe3454a077e0d68299b7453e5121711114121_large.jpg")
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Header Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(240.dp)
-                        )
+                     //   YoutubeScreen(videoId =url,Modifier.fillMaxSize())
+//                        AsyncImage(
+//                            model = ImageRequest.Builder(LocalContext.current)
+//                                .data("https://img1.ak.crunchyroll.com/i/spire1-tmb/fccf5fe3454a077e0d68299b7453e5121711114121_large.jpg")
+//                                .crossfade(true)
+//                                .build(),
+//                            contentDescription = "Header Image",
+//                            contentScale = ContentScale.Crop,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(240.dp)
+//                        )
                         ElevatedButton(
                             onClick = {},
                             modifier = Modifier
@@ -151,88 +159,42 @@ fun AllEpisodesScreen(navController: NavController,viewModel: AllEpisodeViewMode
                     }
                 }
             }
-
-            items(allanimeEpisode.reversed() .size) { index ->
-                val singledata = allanimeEpisode[index]
-                EpisodeBox(singledata)
-            }
-        }
-    }
-}
-
-@Composable
-fun EpisodeBox(singleData: AnimeAllEpisodeModel.Data) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-            .padding(horizontal = 8.dp)
-            .padding(bottom = 12.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-    ) {
-        Row {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.4f)
-                    .fillMaxHeight()
-                    .background(color = Color.White)
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(singleData.images.jpg.image_url).crossfade(true)
-                        .build(),
-                    contentDescription = "Episode Thumbnail",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                //  Text
-                Text(
-                    text = singleData.episode,
-                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //  Text
-                Text(
-                    text = singleData.title,
-                    style = TextStyle(fontSize = 14.sp),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                LinearProgressIndicator(
-                    progress = { 0.5f },
+            item {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.End),
-                    color = Color.Blue,
-                )
-            }
+                        .fillMaxSize()
+                        .padding(16.dp),
+                   // contentAlignment = Alignment.Start
+                ) {
+                   Column {
+                       Text(
+                           text = "Episode- ${allanimeEpisode.size}",
+                           color = Color.White,
+                           style = MaterialTheme.typography.bodyMedium,
+                           textAlign = TextAlign.Left,
+                           fontSize = 22.sp
+                       )
+                       Text(
+                           text = topanimeviewmodel.topAnime.value.get(index).synopsis,
+                           color = Color.White,
+                           style = MaterialTheme.typography.bodyMedium,
+                           textAlign = TextAlign.Left,
+                           fontSize = 22.sp
+                       )
 
+                   }
+                }
+            }
+//            items(allanimeEpisode.reversed() .size) { index ->
+//                val singledata = allanimeEpisode[index]
+//                val encodedUrl = Uri.encode(singledata.url)
+//
+////                EpisodeBox(singledata,{
+////                    navController.navigate("videoPlayerScreen/${encodedUrl}")
+////                })
+//
+//                Text("Episode count ${allanimeEpisode.reversed() .size}")
+//            }
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewEpisodesScreen() {
-//    AllEpisodesScreen()
-//}
